@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -26,35 +28,49 @@ public class EmployeeController {
 	@GetMapping("/employeelist")
 	public void ShowAll() {
 
-		List<Employee> listStudents = empRepo.findAll();
+		try {
 
-		for (Employee emp : listStudents) {
-			System.out.println(emp.getEmployeeId());
-			System.out.println(emp.getEmployeeAddress());
-			System.out.println(emp.getEmployeeName());
-			System.out.println(emp.getEmployeeNumber());
+			List<Employee> listStudents = empRepo.findAll();
+
+			for (Employee emp : listStudents) {
+				System.out.println(emp.getEmployeeId());
+				System.out.println(emp.getEmployeeAddress());
+				System.out.println(emp.getEmployeeName());
+				System.out.println(emp.getEmployeeNumber());
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 
 		}
 
 	}
 
-	// @EventListener(ApplicationReadyEvent.class)
 	@GetMapping("/insertRedis")
 	public void insertRedis() {
 
-		List<Employee> listStudents = empRepo.findAll();
+		try {
 
-		for (Employee emp : listStudents) {
+			List<Employee> listStudents = empRepo.findAll();
 
-			redisTemplate.opsForHash().put(Emp, emp.getEmployeeId(), emp);
-		}
+			for (Employee emp : listStudents) {
 
-		// Verify whether inserted in memory database or not
+				redisTemplate.opsForHash().put(Emp, emp.getEmployeeId(), emp);
 
-		if (redisTemplate.hasKey("Employee")) {
-			System.out.println("present");
-		} else {
-			System.out.println("doesn't exist");
+			}
+
+			// Verify whether inserted in memory database or not
+
+			if (redisTemplate.hasKey("Employee")) {
+				System.out.println("present");
+			} else {
+				System.out.println("doesn't exist");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
 		}
 
 	}
@@ -62,14 +78,26 @@ public class EmployeeController {
 	@EventListener(ApplicationReadyEvent.class)
 	public void Streamdemo() {
 
-		System.out.println("Started");
+		try {
 
-		List<Object> objlistStudents ;
-		objlistStudents = redisTemplate.opsForHash().values(Emp);
-		System.out.println(redisTemplate.opsForHash().values(Emp));
-		
-		
-	
+			List<Object> objlistStudents;
+			objlistStudents = redisTemplate.opsForHash().values(Emp);
+			System.out.println(redisTemplate.opsForHash().values(Emp));
+			List<Employee> listStudents = new ArrayList<Employee>();
+
+			for (Object emp : objlistStudents) {
+
+				listStudents.add(((Employee) emp));
+
+			}
+
+			List<Employee> result = listStudents.stream().filter(line -> !"Faiyaz".equals(line.getEmployeeName()))
+					.collect(Collectors.toList());
+			result.forEach(System.out::println);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

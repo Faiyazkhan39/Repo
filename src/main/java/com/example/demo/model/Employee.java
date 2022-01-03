@@ -22,14 +22,24 @@ public class Employee implements Serializable{
 	private String employeeAddress;
 	private int employeeNumber;
 
-	public Long getEmployeeId() {
-		return employeeId;
+
+	public Employee(Long employeeId, String employeeName, String employeeAddress, int employeeNumber) {
+		super();
+		this.employeeId = employeeId;
+		this.employeeName = employeeName;
+		this.employeeAddress = employeeAddress;
+		this.employeeNumber = employeeNumber;
 	}
 
 	@Override
 	public String toString() {
 		return "Employee [employeeId=" + employeeId + ", employeeName=" + employeeName + ", employeeAddress="
 				+ employeeAddress + ", employeeNumber=" + employeeNumber + "]";
+	}
+	
+
+	public Long getEmployeeId() {
+		return employeeId;
 	}
 
 	public void setEmployeeId(Long employeeId) {
