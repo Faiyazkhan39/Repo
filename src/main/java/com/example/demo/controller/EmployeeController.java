@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,9 +31,9 @@ public class EmployeeController {
 
 		try {
 
-			List<Employee> listStudents = empRepo.findAll();
+			List<Employee> objemp = empRepo.findAll();
 
-			for (Employee emp : listStudents) {
+			for (Employee emp : objemp) {
 				System.out.println(emp.getEmployeeId());
 				System.out.println(emp.getEmployeeAddress());
 				System.out.println(emp.getEmployeeName());
@@ -52,9 +53,9 @@ public class EmployeeController {
 
 		try {
 
-			List<Employee> listStudents = empRepo.findAll();
+			List<Employee> listemp = empRepo.findAll();
 
-			for (Employee emp : listStudents) {
+			for (Employee emp : listemp) {
 
 				redisTemplate.opsForHash().put(Emp, emp.getEmployeeId(), emp);
 
@@ -75,8 +76,34 @@ public class EmployeeController {
 
 	}
 
-	@EventListener(ApplicationReadyEvent.class)
+	@GetMapping("/streamDemo")
 	public void Streamdemo() {
+
+		try {
+
+			List<Object> objlistEmp;
+			objlistEmp = redisTemplate.opsForHash().values(Emp);
+			System.out.println(redisTemplate.opsForHash().values(Emp));
+			List<Employee> listStudents = new ArrayList<Employee>();
+			for (Object emp : objlistEmp) {
+
+				listStudents.add(((Employee) emp));
+
+			}
+
+			List<Employee> result = listStudents.stream()
+					.filter(line -> !"mumbai".equals(line.getEmployeeAddress()))
+					.collect(Collectors.toList());
+					result.forEach(System.out::println);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@GetMapping("/StreamApiDemo")
+	public void StreamApidemo() {
 
 		try {
 
@@ -91,7 +118,10 @@ public class EmployeeController {
 
 			}
 
-			List<Employee> result = listStudents.stream().filter(line -> !"Faiyaz".equals(line.getEmployeeName()))
+			List<Employee> result = listStudents.stream().filter(
+					line -> !"Mumbai".equals(line.getEmployeeAddress())
+					&& !"Sameer".equals(line.getEmployeeName())
+					)
 					.collect(Collectors.toList());
 			result.forEach(System.out::println);
 
@@ -101,4 +131,33 @@ public class EmployeeController {
 
 	}
 
+	@EventListener(ApplicationReadyEvent.class)
+	@GetMapping("/StreamApiDemoSort")
+	public void StreamApidemoSort() {
+
+		try {
+
+			List<Object> objlistStudents;
+			objlistStudents = redisTemplate.opsForHash().values(Emp);
+			System.out.println(redisTemplate.opsForHash().values(Emp));
+			List<Employee> listStudents = new ArrayList<Employee>();
+
+			for (Object emp : objlistStudents) {
+
+				listStudents.add(((Employee) emp));
+
+			}
+
+			List<Employee> sortedList = listStudents.stream()
+			        .sorted(Comparator.comparing(Employee::getEmployeeId))
+			        .collect(Collectors.toList());
+
+			sortedList.forEach(System.out::println);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 }

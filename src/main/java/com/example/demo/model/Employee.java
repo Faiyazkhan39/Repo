@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Employee")
-public class Employee implements Serializable{
+public class Employee implements Serializable {
 
 	/**
 	 * 
@@ -21,7 +21,6 @@ public class Employee implements Serializable{
 	private String employeeName;
 	private String employeeAddress;
 	private int employeeNumber;
-
 
 	public Employee(Long employeeId, String employeeName, String employeeAddress, int employeeNumber) {
 		super();
@@ -36,7 +35,6 @@ public class Employee implements Serializable{
 		return "Employee [employeeId=" + employeeId + ", employeeName=" + employeeName + ", employeeAddress="
 				+ employeeAddress + ", employeeNumber=" + employeeNumber + "]";
 	}
-	
 
 	public Long getEmployeeId() {
 		return employeeId;
@@ -68,6 +66,9 @@ public class Employee implements Serializable{
 
 	public void setEmployeeNumber(int employeeNumber) {
 		this.employeeNumber = employeeNumber;
+	}
+
+	public Employee() {
 	}
 
 }
