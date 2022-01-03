@@ -26,6 +26,12 @@ public class Employee implements Serializable{
 		return employeeId;
 	}
 
+	@Override
+	public String toString() {
+		return "Employee [employeeId=" + employeeId + ", employeeName=" + employeeName + ", employeeAddress="
+				+ employeeAddress + ", employeeNumber=" + employeeNumber + "]";
+	}
+
 	public void setEmployeeId(Long employeeId) {
 		this.employeeId = employeeId;
 	}
