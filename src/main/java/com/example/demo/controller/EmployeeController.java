@@ -1,5 +1,9 @@
 package com.example.demo.controller;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -14,6 +18,31 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.demo.model.Employee;
 import com.example.demo.repository.EmployeeRepository;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.events.PdfDocumentEvent;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.StampingProperties;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.signatures.BouncyCastleDigest;
+import com.itextpdf.signatures.IExternalDigest;
+import com.itextpdf.signatures.IExternalSignature;
+import com.itextpdf.signatures.PdfSigner;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfSignatureAppearance;
+import com.itextpdf.text.pdf.PdfStamper;
 
 @Controller
 public class EmployeeController {
@@ -91,10 +120,9 @@ public class EmployeeController {
 
 			}
 
-			List<Employee> result = listStudents.stream()
-					.filter(line -> !"mumbai".equals(line.getEmployeeAddress()))
+			List<Employee> result = listStudents.stream().filter(line -> !"mumbai".equals(line.getEmployeeAddress()))
 					.collect(Collectors.toList());
-					result.forEach(System.out::println);
+			result.forEach(System.out::println);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,9 +147,7 @@ public class EmployeeController {
 			}
 
 			List<Employee> result = listStudents.stream().filter(
-					line -> !"Mumbai".equals(line.getEmployeeAddress())
-					&& !"Sameer".equals(line.getEmployeeName())
-					)
+					line -> !"Mumbai".equals(line.getEmployeeAddress()) && !"Sameer".equals(line.getEmployeeName()))
 					.collect(Collectors.toList());
 			result.forEach(System.out::println);
 
@@ -131,7 +157,6 @@ public class EmployeeController {
 
 	}
 
-	@EventListener(ApplicationReadyEvent.class)
 	@GetMapping("/StreamApiDemoSort")
 	public void StreamApidemoSort() {
 
@@ -148,9 +173,8 @@ public class EmployeeController {
 
 			}
 
-			List<Employee> sortedList = listStudents.stream()
-			        .sorted(Comparator.comparing(Employee::getEmployeeId))
-			        .collect(Collectors.toList());
+			List<Employee> sortedList = listStudents.stream().sorted(Comparator.comparing(Employee::getEmployeeId))
+					.collect(Collectors.toList());
 
 			sortedList.forEach(System.out::println);
 
@@ -159,5 +183,81 @@ public class EmployeeController {
 		}
 
 	}
-	
+
+	@EventListener(ApplicationReadyEvent.class)
+	@GetMapping("/PDFgenerator")
+	public void PDFgenerator() throws MalformedURLException, IOException {
+
+		{
+			Document document = new Document();
+			try {
+
+				List<Employee> objemppdf = empRepo.findAll();
+
+				// PdfWriter writer = PdfWriter.getInstance(document,
+				// new FileOutputStream("D:\\PDF\\EmployeeDetails.pdf"));
+				String dest = "D:\\PDF\\EmployeeDetailsNew.pdf";
+				String IMG = "D:\\PDF\\logo.png";
+				PdfDocument pdfDoc = new PdfDocument(new PdfWriter(dest));
+
+				document.open();
+				PdfPTable table = new PdfPTable(4);
+				table.setWidthPercentage(100);
+				table.setSpacingBefore(10f);
+				table.setSpacingAfter(10f);
+
+				table.setHeaderRows(1);
+
+				Font bold = new Font(FontFamily.HELVETICA, 12, Font.BOLD);
+
+				table.addCell(new PdfPCell(new Paragraph("ID", bold)));
+				table.addCell(new PdfPCell(new Paragraph("Address", bold)));
+				table.addCell(new PdfPCell(new Paragraph("Name", bold)));
+				table.addCell(new PdfPCell(new Paragraph("Phone", bold)));
+
+				for (Employee emp : objemppdf) {
+
+					PdfPCell cell1 = new PdfPCell(new Paragraph(emp.getEmployeeId().toString()));
+					PdfPCell cell2 = new PdfPCell(new Paragraph(emp.getEmployeeAddress()));
+					PdfPCell cell3 = new PdfPCell(new Paragraph(emp.getEmployeeName()));
+					PdfPCell cell4 = new PdfPCell(new Paragraph(Integer.toString(emp.getEmployeeNumber())));
+
+					table.addCell(cell1);
+					table.addCell(cell2);
+					table.addCell(cell3);
+					table.addCell(cell4);
+
+				}
+
+				// Image image1 = Image.getInstance("D:\\PDF\\logo.png");
+				// image1.setAlignment(Element.ALIGN_CENTER);
+				// image1.scaleAbsolute(120, 60);
+				// image1.setAlignment(Element.ALIGN_RIGHT);
+				// image1.setSpacingAfter(10f);
+
+				Image img = new Image(ImageDataFactory.create(IMG)).setFixedPosition(12, 300);
+
+				ImageEventHandler handler = new ImageEventHandler(img);
+				pdfDoc.addEventHandler(PdfDocumentEvent.END_PAGE, handler);
+
+			//	document.add(image1);
+				document.add(table);
+
+				document.newPage();
+				document.add(new Paragraph("This is Page 2"));
+
+				document.newPage();
+				document.add(new Paragraph("This is Page 3"));
+			//	document.add(image1);
+
+				document.close();
+				pdfDoc.close();
+			} catch (DocumentException e) {
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
 }
