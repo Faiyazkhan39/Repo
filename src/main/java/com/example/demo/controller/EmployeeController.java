@@ -20,11 +20,7 @@ import com.example.demo.model.Employee;
 import com.example.demo.repository.EmployeeRepository;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.events.PdfDocumentEvent;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.StampingProperties;
-import com.itextpdf.layout.element.Image;
 import com.itextpdf.signatures.BouncyCastleDigest;
 import com.itextpdf.signatures.IExternalDigest;
 import com.itextpdf.signatures.IExternalSignature;
@@ -36,6 +32,7 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -43,6 +40,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfWriter;
 
 @Controller
 public class EmployeeController {
@@ -184,7 +182,6 @@ public class EmployeeController {
 
 	}
 
-	@EventListener(ApplicationReadyEvent.class)
 	@GetMapping("/PDFgenerator")
 	public void PDFgenerator() throws MalformedURLException, IOException {
 
@@ -194,12 +191,8 @@ public class EmployeeController {
 
 				List<Employee> objemppdf = empRepo.findAll();
 
-				// PdfWriter writer = PdfWriter.getInstance(document,
-				// new FileOutputStream("D:\\PDF\\EmployeeDetails.pdf"));
-				String dest = "D:\\PDF\\EmployeeDetailsNew.pdf";
-				String IMG = "D:\\PDF\\logo.png";
-				PdfDocument pdfDoc = new PdfDocument(new PdfWriter(dest));
-
+				PdfWriter writer = PdfWriter.getInstance(document,
+						new FileOutputStream("D:\\PDF\\EmployeeDetails.pdf"));
 				document.open();
 				PdfPTable table = new PdfPTable(4);
 				table.setWidthPercentage(100);
@@ -229,29 +222,25 @@ public class EmployeeController {
 
 				}
 
-				// Image image1 = Image.getInstance("D:\\PDF\\logo.png");
-				// image1.setAlignment(Element.ALIGN_CENTER);
-				// image1.scaleAbsolute(120, 60);
-				// image1.setAlignment(Element.ALIGN_RIGHT);
-				// image1.setSpacingAfter(10f);
-
-				Image img = new Image(ImageDataFactory.create(IMG)).setFixedPosition(12, 300);
-
-				ImageEventHandler handler = new ImageEventHandler(img);
-				pdfDoc.addEventHandler(PdfDocumentEvent.END_PAGE, handler);
-
-			//	document.add(image1);
+				Image image1 = Image.getInstance("D:\\PDF\\logo.png");
+				image1.setAlignment(Element.ALIGN_CENTER);
+				image1.scaleAbsolute(120, 60);
+				image1.setAlignment(Element.ALIGN_RIGHT);
+				image1.setSpacingAfter(10f);
+			
+				document.add(image1);
 				document.add(table);
-
+		
+				
 				document.newPage();
 				document.add(new Paragraph("This is Page 2"));
-
+				
 				document.newPage();
 				document.add(new Paragraph("This is Page 3"));
-			//	document.add(image1);
+				document.add(image1);
 
 				document.close();
-				pdfDoc.close();
+				writer.close();
 			} catch (DocumentException e) {
 				e.printStackTrace();
 			} catch (FileNotFoundException e) {
