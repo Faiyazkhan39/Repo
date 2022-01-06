@@ -18,7 +18,6 @@ import com.itextpdf.tool.xml.XMLWorkerHelper;
 @Controller
 public class PDFcontroller {
 	
-	@EventListener(ApplicationReadyEvent.class)
 	@GetMapping("/PDFhtml")
 	public void PDFhtml() {
 		try {

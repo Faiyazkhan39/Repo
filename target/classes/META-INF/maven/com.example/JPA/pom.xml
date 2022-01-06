@@ -82,11 +82,20 @@
 			<version>7.0.4</version>
 			<type>pom</type>
 		</dependency>
-	  <dependency>
-            <groupId>com.itextpdf.tool</groupId>
-            <artifactId>xmlworker</artifactId>
-            <version>5.5.7</version>
-        </dependency>
+		<dependency>
+			<groupId>com.itextpdf.tool</groupId>
+			<artifactId>xmlworker</artifactId>
+			<version>5.5.7</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>3.6.2</version>
+		</dependency>
+		<!-- Thanks for using https://jar-download.com -->
+
+
 
 	</dependencies>
 
