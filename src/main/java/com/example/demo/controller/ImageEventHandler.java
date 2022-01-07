@@ -18,6 +18,7 @@ public class ImageEventHandler implements IEventHandler {
 		this.img = img;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void handleEvent(Event event) {
 		// TODO Auto-generated method stub

@@ -94,7 +94,11 @@
 			<version>3.6.2</version>
 		</dependency>
 		<!-- Thanks for using https://jar-download.com -->
-
+		<dependency>
+			<groupId>org.jinq</groupId>
+			<artifactId>jinq-jpa</artifactId>
+			<version>1.8.34</version>
+		</dependency>
 
 
 	</dependencies>

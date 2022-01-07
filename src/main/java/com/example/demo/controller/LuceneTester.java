@@ -13,7 +13,6 @@ import com.example.demo.lucene.LuceneService;
 @Controller
 public class LuceneTester {
 
-	@EventListener(ApplicationReadyEvent.class)
 	@GetMapping("/LuceneDemo")
 	public void LuceneDemo() {
 

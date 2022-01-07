@@ -7,5 +7,7 @@ import com.example.demo.model.Employee;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+	
+	
 
 }
