@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +40,8 @@ public class EmployeeController {
 
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
-
+	
+	@EventListener(ApplicationReadyEvent.class)
 	@GetMapping("/employeelist")
 	public void ShowAll() {
 
@@ -46,10 +50,17 @@ public class EmployeeController {
 			List<Employee> objemp = empRepo.findAll();
 
 			for (Employee emp : objemp) {
+				
 				System.out.println(emp.getEmployeeId());
 				System.out.println(emp.getEmployeeAddress());
 				System.out.println(emp.getEmployeeName());
 				System.out.println(emp.getEmployeeNumber());
+				System.out.println(emp.getEmployeeDob());
+				System.out.println(emp.getEmployeeDoj());
+				System.out.println(emp.getEmployeePan());
+				System.out.println(emp.getEmployeeSalary());
+				System.out.println(emp.getRole());
+				
 
 			}
 
@@ -62,7 +73,8 @@ public class EmployeeController {
 
 	@GetMapping("/insertRedis")
 	public void insertRedis() {
-
+		
+		
 		try {
 
 			List<Employee> listemp = empRepo.findAll();

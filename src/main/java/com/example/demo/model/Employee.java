@@ -21,19 +21,76 @@ public class Employee implements Serializable {
 	private String employeeName;
 	private String employeeAddress;
 	private int employeeNumber;
+	private String employeeDob;
+	private String employeePan;
+	private String employeeDoj;
+	private int employeeSalary;
+	private String role;
 
-	public Employee(Long employeeId, String employeeName, String employeeAddress, int employeeNumber) {
+	public Employee(Long employeeId, String employeeName, String employeeAddress, int employeeNumber,
+			String employeeDob, String employeePan, String employeeDoj, int employeeSalary, String role) {
 		super();
 		this.employeeId = employeeId;
 		this.employeeName = employeeName;
 		this.employeeAddress = employeeAddress;
 		this.employeeNumber = employeeNumber;
+		this.employeeDob = employeeDob;
+		this.employeePan = employeePan;
+		this.employeeDoj = employeeDoj;
+		this.employeeSalary = employeeSalary;
+		this.role = role;
 	}
 
 	@Override
 	public String toString() {
 		return "Employee [employeeId=" + employeeId + ", employeeName=" + employeeName + ", employeeAddress="
-				+ employeeAddress + ", employeeNumber=" + employeeNumber + "]";
+				+ employeeAddress + ", employeeNumber=" + employeeNumber + ", employeeDob=" + employeeDob
+				+ ", employeePan=" + employeePan + ", employeeDoj=" + employeeDoj + ", employeeSalary=" + employeeSalary
+				+ ", role=" + role + "]";
+	}
+
+	public String getEmployeeDob() {
+		return employeeDob;
+	}
+
+	public void setEmployeeDob(String employeeDob) {
+		this.employeeDob = employeeDob;
+	}
+
+	public String getEmployeePan() {
+		return employeePan;
+	}
+
+	public void setEmployeePan(String employeePan) {
+		this.employeePan = employeePan;
+	}
+
+	public String getEmployeeDoj() {
+		return employeeDoj;
+	}
+
+	public void setEmployeeDoj(String employeeDoj) {
+		this.employeeDoj = employeeDoj;
+	}
+
+	public int getEmployeeSalary() {
+		return employeeSalary;
+	}
+
+	public void setEmployeeSalary(int employeeSalary) {
+		this.employeeSalary = employeeSalary;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public Long getEmployeeId() {
