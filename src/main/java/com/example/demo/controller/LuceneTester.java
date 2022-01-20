@@ -3,8 +3,6 @@ package com.example.demo.controller;
 import java.io.IOException;
 
 import org.apache.lucene.queryParser.ParseException;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
